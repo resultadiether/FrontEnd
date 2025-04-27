@@ -4,12 +4,11 @@ import Link from "next/link";
 export default function Home() {
   return (
     <>
-      {/* Hero Section */}
       <section className="bg-blue-600 text-white text-center py-16">
         <div className="container mx-auto">
           <h1 className="text-4xl font-bold">Welcome to Library Management System</h1>
           <p className="text-xl mt-4">Borrow your favorites book</p>
-          {/* Link component no longer needs <a> tag inside */}
+          
           <Link
             href="/auth"
             className="bg-white text-blue-600 py-2 px-6 mt-6 inline-block rounded-lg text-lg"
