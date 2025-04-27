@@ -7,7 +7,7 @@ export default function Home() {
       <section className="bg-blue-600 text-white text-center py-16">
         <div className="container mx-auto">
           <h1 className="text-4xl font-bold">Welcome to Library Management System</h1>
-          <p className="text-xl mt-4">Borrow your favorites book</p>
+          <p className="text-xl mt-4">Borrow your favorites books</p>
           
           <Link
             href="/auth"
