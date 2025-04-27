@@ -59,7 +59,7 @@ export default function Home() {
       </section>
 
       <footer className="bg-gray-800 text-white text-center py-6">
-        <p className="mb-0">© 2025 MyBrand. All rights reserved.</p>
+        <p className="mb-0">© librarians. All rights reserved.</p>
       </footer>
     </>
   );
