@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import Link from "next/link";
 import { useState } from "react";
 
@@ -10,14 +10,14 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="bg-blue-600 p-4">
-      <div className="container mx-auto flex items-center justify-between">
-        <Link href="/" className="text-white text-2xl font-bold">
+    <nav className="absolute top-0 left-0 w-full z-20 px-6 py-4">
+      <div className="flex items-center justify-between text-white">
+        <Link href="/" className="text-2xl font-bold">
           Library Management System
         </Link>
 
         <button
-          className="lg:hidden text-white"
+          className="lg:hidden"
           onClick={toggleMobileMenu}
           aria-label="Toggle navigation"
         >
@@ -38,11 +38,11 @@ const Navbar = () => {
         </button>
 
         <div
-          className={`lg:flex lg:items-center lg:w-auto ${isMobileMenuOpen ? "block" : "hidden"} w-full`}
+          className={`lg:flex lg:items-center lg:w-auto ${isMobileMenuOpen ? "block" : "hidden"} w-full lg:w-auto`}
         >
-          <ul className="flex flex-col lg:flex-row lg:space-x-8 text-white">
+          <ul className="flex flex-col lg:flex-row lg:space-x-6 mt-4 lg:mt-0 text-white">
             <li>
-              <Link href="/dashboard" className="block px-4 py-2 text-lg hover:bg-blue-700 rounded">
+              <Link href="/dashboard" className="block px-4 py-2 text-lg hover:underline">
                 Dashboard
               </Link>
             </li>
@@ -52,12 +52,12 @@ const Navbar = () => {
               </button>
             </li>
             <li>
-              <Link href="/" className="block px-4 py-2 text-lg hover:bg-blue-700 rounded">
+              <Link href="/" className="block px-4 py-2 text-lg hover:underline">
                 Home
               </Link>
             </li>
             <li>
-              <Link href="/auth" className="block px-4 py-2 text-lg hover:bg-blue-700 rounded">
+              <Link href="/auth" className="block px-4 py-2 text-lg hover:underline">
                 Login
               </Link>
             </li>
