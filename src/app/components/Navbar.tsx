@@ -57,7 +57,7 @@ const Navbar = () => {
               </Link>
             </li>
             <li>
-              <Link href="/auth" className="block px-4 py-2 text-lg hover:underline">
+              <Link href="/Auth" className="block px-4 py-2 text-lg hover:underline">
                 Login
               </Link>
             </li>
