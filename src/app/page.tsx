@@ -19,7 +19,7 @@ export default function Home() {
               Borrow your favorite books
             </p>
             <Link
-              href="/auth"
+              href="/Auth"
               className="bg-blue-600 text-white py-2 px-6 mt-6 inline-block rounded-lg text-lg hover:bg-blue-700"
             >
               Get Started

@@ -1,44 +1,136 @@
-import React from "react";
+"use client";
 
-const Auth: React.FC = ( ) => {
+import React, { useState } from 'react';
+import { myAppHook } from '../Context/AppProvider';
 
-    return <> 
+
+interface FormData {
+  name?: string;
+  email: string;
+  password: string;
+  password_confirmation?: string;
+}
+
+const Auth: React.FC = () => {
+  const [isLogin, setIsLogin] = useState<boolean>(true);
+  const [formData, setFormData] = useState<FormData>({
+    name: '',
+    email: '',
+    password: '',
+    password_confirmation: '',
+  })
+
+
+  const { login } = myAppHook()
+
+
+  const handleChange = async(e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    })
+}
+
+  const handleFormSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
+
+    e.preventDefault();
+
+    if (isLogin) {
+
+      try {
+
+        await login(formData.email, formData.password)
+      }catch (error) {
+        console.log('Login failed :', error);
+      }
+
+    } else {
+      
+      try {
+
+        register(formData.name!, formData.email, formData.password, formData.password_confirmation!)
+      } catch (error) {
+        console.log('Registration failed:', error);
+      }
+
+    }
+  }
+
+  return (
     <div
-      className="min-h-screen bg-cover bg-center flex items-center justify-center"
-      style={{ backgroundImage: "url('/bg.jpg')" }} 
+      className="flex justify-center items-center min-h-screen bg-cover bg-center"
+      style={{ backgroundImage: "url('/login.page.jpg')" }}
     >
-      <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-sm">
-        <h3 className="text-2xl font-bold text-center mb-4">Login</h3>
-        <form>
+      <div className="bg-white bg-opacity-80 backdrop-blur-md p-6 rounded-lg shadow-md w-full max-w-md">
+        <h3 className="text-2xl font-semibold text-center mb-4">
+          {isLogin ? 'Login' : 'Register'}
+        </h3>
+
+        <form className="space-y-3 mb-6" onSubmit={handleFormSubmit}>
+          {!isLogin && (
+            <input
+              className="w-full p-3 border border-gray-300 rounded"
+              name="name"
+              type="text"
+              placeholder="Name"
+              value={formData.name}
+              onChange={handleChange}
+              required
+            />
+          )}
           <input
-            className="w-full p-2 mb-3 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full p-3 border border-gray-300 rounded"
             name="email"
             type="email"
             placeholder="Email"
+            value={formData.email}
+            onChange={handleChange}
             required
           />
           <input
-            className="w-full p-2 mb-4 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full p-3 border border-gray-300 rounded"
             name="password"
             type="password"
             placeholder="Password"
+            value={formData.password}
+            onChange={handleChange}
             required
           />
+          {!isLogin && (
+            <input
+              className="w-full p-3 border border-gray-300 rounded"
+              name="password_confirmation"
+              type="password"
+              placeholder="Confirm Password"
+              value={formData.password_confirmation}
+              onChange={handleChange}
+              required
+            />
+          )}
           <button
-            className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition"
+            className="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded"
             type="submit"
           >
-            Login
+            {isLogin ? 'Login' : 'Register'}
           </button>
         </form>
-        <p className="mt-4 text-center text-sm">
-          Don't have an account? <span className="text-blue-600">Register</span>
+
+        <p className="text-center text-sm">
+          {isLogin ? "Don't have an account?" : 'Already have an account?'}{' '}
+          <span
+            className="text-blue-500 cursor-pointer underline"
+            onClick={() => setIsLogin(!isLogin)}
+          >
+            {isLogin ? 'Register' : 'Login'}
+          </span>
         </p>
       </div>
     </div>
-    </>
+  );
 };
 
 export default Auth;
+function register(arg0: string, email: string, password: string, arg3: string) {
+  throw new Error('Function not implemented.');
+}
 
-    
