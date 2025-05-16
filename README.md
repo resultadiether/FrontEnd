@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
@@ -38,3 +37,6 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 =======
 # FrontEnd
 >>>>>>> 602ebbbfab5661307872663a1143065b85135616
+=======
+# FrontEnd
+>>>>>>> 7bb3ef9e478872f171bbacf371db15a733440484
