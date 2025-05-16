@@ -1,8 +1,8 @@
 "use client";
 
+import { log } from 'console';
 import React, { useState } from 'react';
 import { myAppHook } from '../Context/AppProvider';
-
 
 interface FormData {
   name?: string;
@@ -11,6 +11,7 @@ interface FormData {
   password_confirmation?: string;
 }
 
+
 const Auth: React.FC = () => {
   const [isLogin, setIsLogin] = useState<boolean>(true);
   const [formData, setFormData] = useState<FormData>({
@@ -18,43 +19,44 @@ const Auth: React.FC = () => {
     email: '',
     password: '',
     password_confirmation: '',
-  })
+  });
 
 
-  const { login } = myAppHook()
+  const {login, register} = myAppHook();
 
-
-  const handleChange = async(e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value
-    })
-}
+    });
+  };
 
-  const handleFormSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
-
+  const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (isLogin) {
-
+     
       try {
-
-        await login(formData.email, formData.password)
-      }catch (error) {
-        console.log('Login failed :', error);
-      }
+      await login(formData.email, formData.password);
+    }catch (error) {
+      console.error('Login failed');
+   
+    }
 
     } else {
       
       try {
-
-        register(formData.name!, formData.email, formData.password, formData.password_confirmation!)
+        await register(
+          formData.name!,
+          formData.email,
+          formData.password,
+          formData.password_confirmation!
+        );
       } catch (error) {
-        console.log('Registration failed:', error);
+        console.error('Registration failed ${error}');
       }
-
     }
-  }
+  };
 
   return (
     <div
@@ -130,7 +132,3 @@ const Auth: React.FC = () => {
 };
 
 export default Auth;
-function register(arg0: string, email: string, password: string, arg3: string) {
-  throw new Error('Function not implemented.');
-}
-

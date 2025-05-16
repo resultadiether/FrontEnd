@@ -28,7 +28,7 @@ export const AppProvider = ({
         setIsLoading(true)
 
         try {
-            const response = await axios.post(`${API_URL}/login`, {
+            const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/login`, {
                 email,
                 password
             });
@@ -44,7 +44,7 @@ export const AppProvider = ({
     const register = async (name: string, email: string, password: string, password_confirmation: string ) => {
         setIsLoading(true)
         try {
-            const response = await axios.post(`${API_URL}/register`, {
+            const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/register`, {
                 name,
                 email,
                 password,
