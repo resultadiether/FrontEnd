@@ -6,12 +6,12 @@ export default function Home() {
     <div className="flex flex-col min-h-screen">
       <section
         className="relative w-full min-h-screen bg-cover bg-center text-white flex flex-col items-center justify-center text-center px-4 py-20"
-        style={{ backgroundImage: "url('/bg.jpg')" }}
+        style={{ backgroundImage: "url('/Bg2.jpg')" }}
       >
         <div className="absolute inset-0 bg-black opacity-50"></div>
 
         <div className="relative z-10 max-w-5xl w-full flex flex-col items-center justify-center">
-          <div className="mb-16">
+          <div className="mb-6">
             <h1 className="text-4xl font-bold drop-shadow-lg">
               Welcome to DIETHER Library Management System
             </h1>

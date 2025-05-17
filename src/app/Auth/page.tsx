@@ -1,6 +1,5 @@
 "use client";
 
-import { log } from 'console';
 import React, { useState } from 'react';
 import { myAppHook } from '../Context/AppProvider';
 
@@ -11,7 +10,6 @@ interface FormData {
   password_confirmation?: string;
 }
 
-
 const Auth: React.FC = () => {
   const [isLogin, setIsLogin] = useState<boolean>(true);
   const [formData, setFormData] = useState<FormData>({
@@ -21,8 +19,7 @@ const Auth: React.FC = () => {
     password_confirmation: '',
   });
 
-
-  const {login, register} = myAppHook();
+  const { login, register } = myAppHook();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -35,16 +32,12 @@ const Auth: React.FC = () => {
     e.preventDefault();
 
     if (isLogin) {
-     
       try {
-      await login(formData.email, formData.password);
-    }catch (error) {
-      console.error('Login failed');
-   
-    }
-
+        await login(formData.email, formData.password);
+      } catch (error) {
+        console.error('Login failed');
+      }
     } else {
-      
       try {
         await register(
           formData.name!,
@@ -53,25 +46,25 @@ const Auth: React.FC = () => {
           formData.password_confirmation!
         );
       } catch (error) {
-        console.error('Registration failed ${error}');
+        console.error(`Registration failed ${error}`);
       }
     }
   };
 
   return (
     <div
-      className="flex justify-center items-center min-h-screen bg-cover bg-center"
-      style={{ backgroundImage: "url('/login.page.jpg')" }}
+      className="flex justify-center items-center min-h-screen bg-cover bg-center bg-no-repeat"
+      style={{ backgroundImage: "url('/Bg3.jpg')" }}
     >
-      <div className="bg-white bg-opacity-80 backdrop-blur-md p-6 rounded-lg shadow-md w-full max-w-md">
-        <h3 className="text-2xl font-semibold text-center mb-4">
+      <div className="bg-white/90 backdrop-blur-xl p-10 rounded-3xl shadow-2xl w-full max-w-md border border-gray-100 ring-1 ring-gray-200 space-y-6 transition-all duration-300">
+        <h3 className="text-2xl font-semibold text-center text-gray-800">
           {isLogin ? 'Login' : 'Register'}
         </h3>
 
-        <form className="space-y-3 mb-6" onSubmit={handleFormSubmit}>
+        <form className="space-y-4" onSubmit={handleFormSubmit}>
           {!isLogin && (
             <input
-              className="w-full p-3 border border-gray-300 rounded"
+              className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
               name="name"
               type="text"
               placeholder="Name"
@@ -81,7 +74,7 @@ const Auth: React.FC = () => {
             />
           )}
           <input
-            className="w-full p-3 border border-gray-300 rounded"
+            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
             name="email"
             type="email"
             placeholder="Email"
@@ -90,7 +83,7 @@ const Auth: React.FC = () => {
             required
           />
           <input
-            className="w-full p-3 border border-gray-300 rounded"
+            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
             name="password"
             type="password"
             placeholder="Password"
@@ -100,7 +93,7 @@ const Auth: React.FC = () => {
           />
           {!isLogin && (
             <input
-              className="w-full p-3 border border-gray-300 rounded"
+              className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
               name="password_confirmation"
               type="password"
               placeholder="Confirm Password"
@@ -110,17 +103,17 @@ const Auth: React.FC = () => {
             />
           )}
           <button
-            className="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded"
+            className="w-full bg-blue-500 hover:bg-blue-600 text-white py-3 rounded-lg font-medium transition-colors duration-200"
             type="submit"
           >
             {isLogin ? 'Login' : 'Register'}
           </button>
         </form>
 
-        <p className="text-center text-sm">
+        <p className="text-center text-sm text-gray-700">
           {isLogin ? "Don't have an account?" : 'Already have an account?'}{' '}
           <span
-            className="text-blue-500 cursor-pointer underline"
+            className="text-blue-500 cursor-pointer underline hover:text-blue-600"
             onClick={() => setIsLogin(!isLogin)}
           >
             {isLogin ? 'Register' : 'Login'}
