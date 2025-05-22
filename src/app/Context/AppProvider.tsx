@@ -78,9 +78,9 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
         toast.success('Login successful');
 
         if (role === 'admin') {
-          router.push('/Dashboard/Admin');
+          router.push('/dashboard/admin');
         } else {
-          router.push('/Dashboard/User');
+          router.push('/dashboard/User');
         }
       } else {
         toast.error('Login failed');
