@@ -4,17 +4,10 @@ import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { fetchUser } from '../utils/user'; 
+
 
 export default function Home() {
   const [user, setUser] = useState<{ name: string } | null>(null);
-
-
-  useEffect(() => {
-    fetchUser()
-      .then(setUser)
-      .catch((err) => console.error('Failed to fetch user:', err));
-  }, []);
 
   return (
     <div className="flex flex-col min-h-screen bg-[#0f172a] text-white">
