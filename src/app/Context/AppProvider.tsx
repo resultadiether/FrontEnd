@@ -38,7 +38,6 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
   const router = useRouter();
 
   useEffect(() => {
-    // Restore session from cookies
     const token = Cookies.get('AuthToken');
     const name = Cookies.get('UserName');
     const email = Cookies.get('UserEmail');
@@ -77,16 +76,11 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
 
         toast.success('Login successful');
 
-        if (role === 'admin') {
-          router.push('/dashboard/admin');
-        } else {
-          router.push('/dashboard/User');
-        }
+        router.push(role === 'admin' ? '/dashboard/admin' : '/dashboard/user');
       } else {
         toast.error('Login failed');
       }
 
-      console.log('Login response:', response.data);
     } catch (error: any) {
       toast.error(error.response?.data?.message || 'Login error');
     } finally {
@@ -109,7 +103,6 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
         password_confirmation,
       });
 
-      console.log('Registration response:', response.data);
       toast.success('Registration successful');
       router.push('/Auth');
     } catch (error: any) {
@@ -119,14 +112,27 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
     }
   };
 
-  const logout = () => {
-    setAuthToken(null);
-    setUser(null);
-    Cookies.remove('AuthToken');
-    Cookies.remove('UserName');
-    Cookies.remove('UserEmail');
-    Cookies.remove('UserRole');
-    setShowLogoutModal(true);
+  const logout = async () => {
+    try {
+      const token = Cookies.get('AuthToken');
+      if (token) {
+        await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/logout`, {}, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+      }
+    } catch (error) {
+      // Optional: show toast or log
+    } finally {
+      setAuthToken(null);
+      setUser(null);
+      Cookies.remove('AuthToken');
+      Cookies.remove('UserName');
+      Cookies.remove('UserEmail');
+      Cookies.remove('UserRole');
+      setShowLogoutModal(true);
+    }
   };
 
   const handleCloseModal = () => {
@@ -147,7 +153,6 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
     >
       {isloading ? <Loader /> : children}
 
-      {/* Logout Modal */}
       {showLogoutModal && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
           <div className="bg-white rounded-lg p-6 max-w-sm mx-auto shadow-lg text-center">
