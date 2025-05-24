@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { fetchUser } from '../utils/api'; 
+import { fetchUser } from '../utils/user'; 
 
 export default function Home() {
   const [user, setUser] = useState<{ name: string } | null>(null);
