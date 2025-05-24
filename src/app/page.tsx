@@ -50,7 +50,7 @@ export default function Home() {
             animate={{ opacity: 1 }}
             transition={{ delay: 0.4, duration: 0.6 }}
           >
-            {user ? `Hello, ${user.name}!` : 'Loading user...'}
+            
           </motion.p>
 
           {/* Description */}
