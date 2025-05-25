@@ -20,10 +20,12 @@ const formVariants = {
 const Auth: React.FC = () => {
   const [isLogin, setIsLogin] = useState<boolean>(true);
   const [formData, setFormData] = useState<FormData>({
+   
     name: '',
     email: '',
     password: '',
     password_confirmation: '',
+    
   });
 
   const { login, register } = myAppHook();

@@ -89,28 +89,45 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   const register = async (
-    name: string,
-    email: string,
-    password: string,
-    password_confirmation: string
-  ) => {
-    setIsLoading(true);
-    try {
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/register`, {
-        name,
-        email,
-        password,
-        password_confirmation,
-      });
+  name: string,
+  email: string,
+  password: string,
+  password_confirmation: string
+) => {
+  setIsLoading(true);
+  try {
+    const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/register`, {
+      name,
+      email,
+      password,
+      password_confirmation,
+    });
+
+    if (response.data.status) {
+      const token = response.data.token;
+      const role = response.data.user?.role || 'user';
+
+      Cookies.set('AuthToken', token, { expires: 7 });
+      Cookies.set('UserName', name, { expires: 7 });
+      Cookies.set('UserEmail', email, { expires: 7 });
+      Cookies.set('UserRole', role, { expires: 7 });
+
+      setAuthToken(token);
+      setUser({ name, email, role });
 
       toast.success('Registration successful');
-      router.push('/Auth');
-    } catch (error: any) {
-      toast.error(error.response?.data?.message || 'Registration failed');
-    } finally {
-      setIsLoading(false);
+      router.push(role === 'admin' ? '/dashboard/admin' : '/dashboard/user');
+    } else {
+      toast.error('Registration failed');
     }
-  };
+
+  } catch (error: any) {
+    toast.error(error.response?.data?.message || 'Registration error');
+  } finally {
+    setIsLoading(false);
+  }
+};
+
 
   const logout = async () => {
     try {
