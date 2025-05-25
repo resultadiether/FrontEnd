@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState } from 'react';
-import { myAppHook } from '../Context/AppProvider';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface FormData {
@@ -20,15 +19,11 @@ const formVariants = {
 const Auth: React.FC = () => {
   const [isLogin, setIsLogin] = useState<boolean>(true);
   const [formData, setFormData] = useState<FormData>({
-   
     name: '',
     email: '',
     password: '',
     password_confirmation: '',
-    
   });
-
-  const { login, register } = myAppHook();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -40,23 +35,46 @@ const Auth: React.FC = () => {
   const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (isLogin) {
-      try {
-        await login(formData.email, formData.password);
-      } catch (error) {
-        console.error('Login failed');
+    try {
+      const url = isLogin
+        ? 'https://laravel-backend-1qc0.onrender.com/api/login'
+        : 'https://laravel-backend-1qc0.onrender.com/api/register';
+
+      const body = isLogin
+        ? {
+            email: formData.email,
+            password: formData.password,
+          }
+        : {
+            name: formData.name,
+            email: formData.email,
+            password: formData.password,
+            password_confirmation: formData.password_confirmation,
+          };
+
+      const res = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        },
+        body: JSON.stringify(body),
+      });
+
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.message || 'Something went wrong');
       }
-    } else {
-      try {
-        await register(
-          formData.name!,
-          formData.email,
-          formData.password,
-          formData.password_confirmation!
-        );
-      } catch (error) {
-        console.error(`Registration failed ${error}`);
+
+      const data = await res.json();
+      console.log('Success:', data);
+
+      // Optional: store token
+      if (data.token) {
+        localStorage.setItem('token', data.token);
       }
+    } catch (error) {
+      console.error(`${isLogin ? 'Login' : 'Registration'} failed:`, error);
     }
   };
 
@@ -65,12 +83,9 @@ const Auth: React.FC = () => {
       className="relative flex min-h-screen items-center justify-center px-4 bg-gray-900 bg-cover bg-center"
       style={{ backgroundImage: "url('/login-bg2.jpg')" }}
     >
-      {/* Overlay */}
       <div className="absolute inset-0 bg-black opacity-50"></div>
 
       <div className="relative flex flex-col md:flex-row w-full max-w-4xl rounded-2xl overflow-hidden border border-white/30 z-10">
-
-        {/* Left Side Image */}
         <div className="hidden md:block md:w-1/2 relative">
           <img
             src="/bg3.jpg"
@@ -80,10 +95,9 @@ const Auth: React.FC = () => {
           <div className="absolute inset-0 bg-black opacity-10"></div>
         </div>
 
-        {/* Right Side: Animated Semi-transparent Auth Form */}
         <div className="w-full md:w-1/2 p-10 flex flex-col justify-center">
           <motion.div
-            key={isLogin ? "login" : "register"}
+            key={isLogin ? 'login' : 'register'}
             variants={formVariants}
             initial="initial"
             animate="animate"
