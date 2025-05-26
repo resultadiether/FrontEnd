@@ -60,24 +60,21 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
         email,
         password,
       });
-
-      if (response.data.status) {
-        const token = response.data.token;
-        const name = response.data.user?.name || 'Unknown';
-        const userEmail = response.data.user?.email || email;
-        const role = response.data.user?.role || 'user';
-
+  
+      const { token, user } = response.data;
+  
+      if (token && user) {
         Cookies.set('AuthToken', token, { expires: 7 });
-        Cookies.set('UserName', name, { expires: 7 });
-        Cookies.set('UserEmail', userEmail, { expires: 7 });
-        Cookies.set('UserRole', role, { expires: 7 });
-
+        Cookies.set('UserName', user.name || 'Unknown', { expires: 7 });
+        Cookies.set('UserEmail', user.email || email, { expires: 7 });
+        Cookies.set('UserRole', user.role || 'user', { expires: 7 });
+  
         setAuthToken(token);
-        setUser({ name, email: userEmail, role });
-
+        setUser({ name: user.name, email: user.email, role: user.role || 'user' });
+  
         toast.success('Login successful');
-
-        if (role === 'admin') {
+  
+        if (user.role === 'admin') {
           router.push('/Dashboard/Admin');
         } else {
           router.push('/Dashboard/User');
@@ -85,7 +82,7 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
       } else {
         toast.error('Login failed');
       }
-
+  
       console.log('Login response:', response.data);
     } catch (error: any) {
       toast.error(error.response?.data?.message || 'Login error');
@@ -93,6 +90,7 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
       setIsLoading(false);
     }
   };
+  
 
   const register = async (
     name: string,
