@@ -71,7 +71,7 @@ const Auth: React.FC = () => {
         {/* Left Side Image */}
         <div className="hidden md:block md:w-1/2 relative">
           <img
-            src="/Bg3.jpg"
+            src="/bg3.jpg"
             alt="Login Visual"
             className="h-full w-full object-cover"
           />
