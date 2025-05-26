@@ -20,7 +20,7 @@ const initialBooks = [
   // Romance (10)
   { title: 'Pride and Prejudice', author: 'Jane Austen', status: 'Available', image: '/book4.jpg', category: 'Romance' },
   { title: 'Me Before You', author: 'Jojo Moyes', status: 'Borrowed', image: '/Romance-2.jpg', category: 'Romance' },
-  { title: 'The Notebook', author: 'Nicholas Sparks', status: 'Available', image: '/rom-3.jpg', category: 'Romance' },
+  { title: 'The Notebook', author: 'Nicholas Sparks', status: 'Available', image: '/Rom-3.jpg', category: 'Romance' },
   { title: 'Outlander', author: 'Diana Gabaldon', status: 'Available', image: '/rom-4.jpg', category: 'Romance' },
   { title: 'Twilight', author: 'Stephenie Meyer', status: 'Available', image: '/rom-5.jpg', category: 'Romance' },
   { title: 'The Time Traveler’s Wife', author: 'Audrey Niffenegger', status: 'Borrowed', image: '/rom-6.jpg', category: 'Romance' },
