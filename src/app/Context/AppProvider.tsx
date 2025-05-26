@@ -37,18 +37,20 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
 
   const router = useRouter();
 
+  // ✅ Auto-load user from cookies
   useEffect(() => {
     const token = Cookies.get('AuthToken');
     const name = Cookies.get('UserName');
     const email = Cookies.get('UserEmail');
     const role = Cookies.get('UserRole');
 
-    if (token) {
+    if (token && name && email && role) {
       setAuthToken(token);
-    }
-
-    if (name && email && role) {
       setUser({ name, email, role });
+
+      // ✅ Auto-redirect if already logged in
+      const dashboardPath = role === 'admin' ? '/dashboard/admin' : '/dashboard/user';
+      router.push(dashboardPath);
     }
   }, []);
 
@@ -60,12 +62,14 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
         password,
       });
 
-      if (response.data.status) {
-        const token = response.data.token;
-        const name = response.data.user?.name || 'Unknown';
-        const userEmail = response.data.user?.email || email;
-        const role = response.data.user?.role || 'user';
+      const resUser = response.data?.user || {};
+      const token = response.data?.token;
 
+      const name = resUser.name || 'Unknown';
+      const userEmail = resUser.email || email;
+      const role = resUser.role || 'user'; // fallback to user
+
+      if (token) {
         Cookies.set('AuthToken', token, { expires: 7 });
         Cookies.set('UserName', name, { expires: 7 });
         Cookies.set('UserEmail', userEmail, { expires: 7 });
@@ -76,11 +80,11 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
 
         toast.success('Login successful');
 
-        router.push(role === 'admin' ? '/dashboard/admin' : '/dashboard/user');
+        const dashboardPath = role === 'admin' ? '/dashboard/admin' : '/dashboard/user';
+        router.push(dashboardPath);
       } else {
-        toast.error('Login failed');
+        toast.error('Login failed: No token');
       }
-
     } catch (error: any) {
       toast.error(error.response?.data?.message || 'Login error');
     } finally {
@@ -89,45 +93,44 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   const register = async (
-  name: string,
-  email: string,
-  password: string,
-  password_confirmation: string
-) => {
-  setIsLoading(true);
-  try {
-    const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/register`, {
-      name,
-      email,
-      password,
-      password_confirmation,
-    });
+    name: string,
+    email: string,
+    password: string,
+    password_confirmation: string
+  ) => {
+    setIsLoading(true);
+    try {
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/register`, {
+        name,
+        email,
+        password,
+        password_confirmation,
+      });
 
-    if (response.data.status) {
-      const token = response.data.token;
-      const role = response.data.user?.role || 'user';
+      const token = response.data?.token;
+      const role = response.data?.user?.role || 'user';
 
-      Cookies.set('AuthToken', token, { expires: 7 });
-      Cookies.set('UserName', name, { expires: 7 });
-      Cookies.set('UserEmail', email, { expires: 7 });
-      Cookies.set('UserRole', role, { expires: 7 });
+      if (token) {
+        Cookies.set('AuthToken', token, { expires: 7 });
+        Cookies.set('UserName', name, { expires: 7 });
+        Cookies.set('UserEmail', email, { expires: 7 });
+        Cookies.set('UserRole', role, { expires: 7 });
 
-      setAuthToken(token);
-      setUser({ name, email, role });
+        setAuthToken(token);
+        setUser({ name, email, role });
 
-      toast.success('Registration successful');
-      router.push(role === 'admin' ? '/dashboard/admin' : '/dashboard/user');
-    } else {
-      toast.error('Registration failed');
+        toast.success('Registration successful');
+        const dashboardPath = role === 'admin' ? '/dashboard/admin' : '/dashboard/user';
+        router.push(dashboardPath);
+      } else {
+        toast.error('Registration failed');
+      }
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || 'Registration error');
+    } finally {
+      setIsLoading(false);
     }
-
-  } catch (error: any) {
-    toast.error(error.response?.data?.message || 'Registration error');
-  } finally {
-    setIsLoading(false);
-  }
-};
-
+  };
 
   const logout = async () => {
     try {
@@ -140,7 +143,7 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
         });
       }
     } catch (error) {
-      // Optional: show toast or log
+      // Optional: toast or console log
     } finally {
       setAuthToken(null);
       setUser(null);
