@@ -37,20 +37,19 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
 
   const router = useRouter();
 
-  // ✅ Auto-load user from cookies
   useEffect(() => {
+    // Restore session from cookies
     const token = Cookies.get('AuthToken');
     const name = Cookies.get('UserName');
     const email = Cookies.get('UserEmail');
     const role = Cookies.get('UserRole');
 
-    if (token && name && email && role) {
+    if (token) {
       setAuthToken(token);
-      setUser({ name, email, role });
+    }
 
-      // ✅ Auto-redirect if already logged in
-      const dashboardPath = role === 'admin' ? '/dashboard/admin' : '/dashboard/user';
-      router.push(dashboardPath);
+    if (name && email && role) {
+      setUser({ name, email, role });
     }
   }, []);
 
@@ -62,14 +61,12 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
         password,
       });
 
-      const resUser = response.data?.user || {};
-      const token = response.data?.token;
+      if (response.data.status) {
+        const token = response.data.token;
+        const name = response.data.user?.name || 'Unknown';
+        const userEmail = response.data.user?.email || email;
+        const role = response.data.user?.role || 'user';
 
-      const name = resUser.name || 'Unknown';
-      const userEmail = resUser.email || email;
-      const role = resUser.role || 'user'; // fallback to user
-
-      if (token) {
         Cookies.set('AuthToken', token, { expires: 7 });
         Cookies.set('UserName', name, { expires: 7 });
         Cookies.set('UserEmail', userEmail, { expires: 7 });
@@ -80,11 +77,16 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
 
         toast.success('Login successful');
 
-        const dashboardPath = role === 'admin' ? '/dashboard/admin' : '/dashboard/user';
-        router.push(dashboardPath);
+        if (role === 'admin') {
+          router.push('/Dashboard/Admin');
+        } else {
+          router.push('/Dashboard/User');
+        }
       } else {
-        toast.error('Login failed: No token');
+        toast.error('Login failed');
       }
+
+      console.log('Login response:', response.data);
     } catch (error: any) {
       toast.error(error.response?.data?.message || 'Login error');
     } finally {
@@ -107,52 +109,24 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
         password_confirmation,
       });
 
-      const token = response.data?.token;
-      const role = response.data?.user?.role || 'user';
-
-      if (token) {
-        Cookies.set('AuthToken', token, { expires: 7 });
-        Cookies.set('UserName', name, { expires: 7 });
-        Cookies.set('UserEmail', email, { expires: 7 });
-        Cookies.set('UserRole', role, { expires: 7 });
-
-        setAuthToken(token);
-        setUser({ name, email, role });
-
-        toast.success('Registration successful');
-        const dashboardPath = role === 'admin' ? '/dashboard/admin' : '/dashboard/user';
-        router.push(dashboardPath);
-      } else {
-        toast.error('Registration failed');
-      }
+      console.log('Registration response:', response.data);
+      toast.success('Registration successful');
+      router.push('/Auth');
     } catch (error: any) {
-      toast.error(error.response?.data?.message || 'Registration error');
+      toast.error(error.response?.data?.message || 'Registration failed');
     } finally {
       setIsLoading(false);
     }
   };
 
-  const logout = async () => {
-    try {
-      const token = Cookies.get('AuthToken');
-      if (token) {
-        await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/logout`, {}, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-      }
-    } catch (error) {
-      // Optional: toast or console log
-    } finally {
-      setAuthToken(null);
-      setUser(null);
-      Cookies.remove('AuthToken');
-      Cookies.remove('UserName');
-      Cookies.remove('UserEmail');
-      Cookies.remove('UserRole');
-      setShowLogoutModal(true);
-    }
+  const logout = () => {
+    setAuthToken(null);
+    setUser(null);
+    Cookies.remove('AuthToken');
+    Cookies.remove('UserName');
+    Cookies.remove('UserEmail');
+    Cookies.remove('UserRole');
+    setShowLogoutModal(true);
   };
 
   const handleCloseModal = () => {
@@ -173,6 +147,7 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
     >
       {isloading ? <Loader /> : children}
 
+      {/* Logout Modal */}
       {showLogoutModal && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
           <div className="bg-white rounded-lg p-6 max-w-sm mx-auto shadow-lg text-center">

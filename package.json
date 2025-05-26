@@ -13,8 +13,8 @@
     "framer-motion": "^12.12.1",
     "js-cookie": "^3.0.5",
     "next": "^15.3.1",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
     "react-hot-toast": "^2.5.2",
     "recharts": "^2.15.3"
   },
